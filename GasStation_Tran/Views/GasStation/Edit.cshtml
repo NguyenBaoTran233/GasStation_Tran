@@ -1,0 +1,233 @@
+﻿@model GasStation_Tran.ViewModels.GasStationViewModels
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<div class="container-fluid">
+    <form method="post" asp-action="Edit" name="Edit" id="Edit">
+        <div class="row justify-content-center" style="font-weight:600">
+            <label><h3>ガソリンスタンド登録</h3></label>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname"><b>ガソリンスタンド名</b></label>
+            </div>
+            <div class="col-75">
+                <input asp-for="@Model.GasStationAdd.GasStationName" class="form-control">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-25">
+                <label for="lname" style="font-weight:600">種類</label>
+            </div>
+            <div class="col-75">
+                <ul>
+                    @for (var i = 0; i < Model.lstGasStationType.Count; i++)
+                    {
+                        <li>
+                            <input type="checkbox" asp-for="@Model.lstGasStationType[i].Selected" checked="@(Model.GasStationAdd.GasStationTypeCode.Contains(Model.lstGasStationType[i].TypeCode)? true :false)" />
+                            <label asp-for="@Model.lstGasStationType[i].Selected">@Model.lstGasStationType[i].TypeText</label>
+                            <input type="hidden" asp-for="@Model.lstGasStationType[i].TypeCode" />
+                            <input type="hidden" asp-for="@Model.lstGasStationType[i].TypeText" />
+                        </li>
+
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">Longitude</label>
+            </div>
+            <div class="col-75">
+                <input asp-for="@Model.GasStationAdd.Longitude" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">Latitude</label>
+            </div>
+            <div class="col-75">
+                <input asp-for="@Model.GasStationAdd.Latitude" class="form-control">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">住所</label>
+            </div>
+            <div class="col-75">
+                <select asp-for="@Model.GasStationAdd.DistrictId" class="form-control"
+                        asp-items="@(new SelectList(Model.lstDistricts, "DistrictId", "DistrictName"))">
+                    <option value="-1"></option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">住所</label>
+            </div>
+            <div class="col-75">
+                <input asp-for="@Model.GasStationAdd.Address" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">開館時間</label>
+            </div>
+            <div class="col-75">
+                <input asp-for="@Model.GasStationAdd.OpeningTime" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">評価</label>
+            </div>
+            <div class="col-75">
+                @foreach (var item in Model.lstRating)
+                {
+                    <input asp-for="@Model.TypeCode" type="radio" value="@item.TypeCode" checked="@(item.TypeCode==Model.GasStationAdd.TypeCode ? true:false)">
+                    @switch (item.TypeCode)
+                    {
+                        case "00001":
+                            <td><i style="color:red;font-size:20px" class="fas fa-certificate"></i></td>
+                            break;
+                        case "00002":
+                            <td><i style="color:blue;font-size:20px" class="fas fa-certificate"></i></td>
+                            break;
+                        case "00003":
+                            <td><i style="color:gray;font-size:20px" class="fas fa-certificate"></i></td>
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <input type="submit" name="submit" value="登録" class="btn btn-primary" />
+            </div>
+            <div class="col-75">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <a class="btn btn-primary" href="/GasStation/Index">戻る</a>
+            </div>
+            <div class="col-75">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#Edit').on('submit', function () {
+            var submit = true;
+            let GasStationName = $('#GasStationName').val();
+          /*  let GasStationType = $('#GasStationType').val();*/
+            let Longitude = $('#GLongitude').val();
+            let Latitude = $('#Latitude').val();
+            //let OpeningTime = $('#OpeningTime').val();
+            //let Rating = $('#Rating').val();
+
+            
+            if (GasStationName.length > 100) {
+                $('#GasStationName').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください。")
+                submit = false
+            }
+            else {
+                $('#GasStationName').next(".err").html("")
+            }
+
+            if (GasStationName == "") {
+                $('#GasStationName').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください。")
+                submit = false
+            }
+
+            if (Longitude.length > 20) {
+                $('#Longitude').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください。")
+                submit = false
+            }
+            else {
+                $('#Longitude').next(".err").html("")
+            }
+
+            if (Longitude == "") {
+                $('#Longitude').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください。")
+                submit = false
+            }
+
+            if (Latitude.length > 20) {
+                $('#Latitude').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください。")
+                submit = false
+            }
+            else {
+                $('#Latitude').next(".err").html("")
+            }
+
+            if (Latitude == "") {
+                $('#Latitude').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください。")
+                submit = false
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //else {
+            //    if (!regexEmail.test(String(email).toLocaleLowerCase())) {
+            //        $('#Email').next(".err").html("Định dạng email bị sai")
+            //    }
+            //    else {
+            //        $('#Email').next(".err").html("")
+            //    }
+            //}
+
+            //if (password.length > 100) {
+            //    $('#Password').next(".err").html("Password vượt quá kí tự cho phép")
+            //    submit = false
+            //}
+            //else {
+            //    $('#Password').next(".err").html("")
+            //}
+
+            //if (password == "") {
+            //    $('#Password').next(".err").html("Password trống");
+            //    submit = false;
+            //}
+            //else {
+            //    $('#Password').next(".err").html("");
+            //}
+            return submit;
+        })
+    })
+</script>
+
+

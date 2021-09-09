@@ -1,0 +1,249 @@
+﻿@model GasStation_Tran.ViewModels.GasStationViewModels
+@{
+    var msg = ViewData["MessageTable"];
+}
+
+<div style="background-color: lightgrey">
+    <form id="formSearch" method="post">
+        <div class="row justify-content-center">
+            <input type="hidden" value="0" id="SelectPage" name="SelectPage" />
+            <label>
+                <b>
+                    ガソリンスタンド一覧
+                </b>
+            </label>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">ガソリンスタンド名</label>
+            </div>
+            <div class="col-75">
+                <input asp-for="@Model.GasStationNameSearch" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="lname" style="font-weight:600">種類</label>
+            </div>
+            <div class="col-75">
+                @for (var i = 0; i < Model.lstGasStationType.Count; i++)
+                {
+                    <div>
+                        <input type="checkbox" asp-for="@Model.lstGasStationType[i].Selected" />
+                        <label asp-for="@Model.lstGasStationType[i].Selected">@Model.lstGasStationType[i].TypeText</label>
+                    </div>
+                    <input type="hidden" asp-for="@Model.lstGasStationType[i].TypeCode" />
+                    <input type="hidden" asp-for="@Model.lstGasStationType[i].TypeText" />
+
+                }
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="country" style="font-weight:600">地区</label>
+            </div>
+            <div class="col-75">
+                <select asp-for="@Model.DistrictId" class="form-control"
+                        asp-items="@(new SelectList(Model.lstDistricts, "DistrictId", "DistrictName"))">
+                    <option></option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+
+            </div>
+            <div class="col-75">
+                <input type="submit" value="検索">
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-25">
+            @Html.ActionLink("登録", "Add", "GasStation", null, new { @class = "btn btn-primary" })
+        </div>
+        <div class="col-75">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered px-2 text-center">
+                <thead>
+                    <tr>
+                        <th>ガソリンスタンド名</th>
+                        <th>種類</th>
+                        <th>地区</th>
+                        <th>Longitude,Latitude</th>
+                        <th>評価</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (msg != null)
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-danger">
+                                @msg
+                            </td>
+                        </tr>
+
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.lstgasStationTables)
+                        {
+                            <tr>
+
+                                <td>
+                                    <a asp-action="Feedback" asp-route-id="@item.GasStationId">
+                                        @item.GasStationName
+                                    </a>
+                                </td>
+                                <td>
+                                    @item.GasStationType
+                                </td>
+                                <td>
+                                    @item.DistrictName
+                                </td>
+                                <td>
+                                    @item.Longitude ,@item.Latitude
+                                </td>
+                                @switch (item.TypeCode)
+                                {
+                                    case "00001":
+                                        <td><i style="color:red;font-size:20px" class="fas fa-certificate"></i></td>
+                                        break;
+                                    case "00002":
+                                        <td><i style="color:blue;font-size:20px" class="fas fa-certificate"></i></td>
+                                        break;
+                                    case "00003":
+                                        <td><i style="color:gray;font-size:20px" class="fas fa-certificate"></i></td>
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.GasStationId">Edit</a>
+                                </td>
+                                <td>
+                                    @*<a href="#" data-id="@item.GasStationId" class="btnSubmit1">Delete</a>*@
+                                    <a style="cursor:pointer;color:red" onclick="confirmDelete('@item.GasStationName',@item.GasStationId)">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <ul class="pagination row justify-content-end mr-3">
+        @{if (msg == null)
+            {
+                var totalPage = Convert.ToInt32(ViewBag.Page.ToString());
+
+                if (ViewBag.CurrentPage != 0)
+                {
+                    <li class="page-item">
+                        <a class="page-link text-primary" onclick="changePage(parseInt('@ViewBag.CurrentPage') - 1)"><i class="fa fa-arrow-left"></i></a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link text-dark" href="#" tabindex="-1" aria-disabled="true"><i class="fa fa-arrow-left"></i></a>
+                    </li>
+                }
+                for (int i = 0; i < totalPage + 1; i++)
+                {
+                    if (i != ViewBag.CurrentPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" onclick="changePage(@i)">
+                                @(i+1)
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" onclick="changePage(@i)">@(i+1) <span class="sr-only">(current)</span></a>
+                        </li>
+                    }
+                }
+                if (ViewBag.CurrentPage == totalPage)
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link text-dark" href="#" tabindex="-1" aria-disabled="true"><i class="fa fa-arrow-right"></i></a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <a class="page-link text-primary" onclick="changePage(parseInt('@ViewBag.CurrentPage') + 1)"><i class="fa fa-arrow-right"></i></a>
+                    </li>
+                }
+            }
+
+        }
+    </ul>
+</div>
+<script>
+    function confirmDelete(name, id) {
+        let temp = confirm(`Ban co muon xoa ${name}`);
+        if (temp) {
+            $.ajax({
+                type: "GET",
+                url: '@Html.Raw(Url.Action("Delete","GasStation"))' + '?id=' + id,
+                success: (result) => {
+                    console.log(result);
+                    if (result == "ok") {
+                        window.location.reload();
+                    }
+                    else {
+                        window.alert("Khong the delete");
+                    }
+                }
+            })
+        }
+    }
+
+    function changePage(currentPage) {
+        $('#SelectPage').val(currentPage);
+        $('#formSearch').submit();
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#Edit').on('submit', function () {
+            var submit = true;
+            let GasStationName = $('#GasStationName').val();
+            /*  let GasStationType = $('#GasStationType').val();*/
+            //let Longitude = $('#GLongitude').val();
+            //let Latitude = $('#Latitude').val();
+            //let OpeningTime = $('#OpeningTime').val();
+            //let Rating = $('#Rating').val();
+
+
+            if (GasStationName.length > 100) {
+                $('#Email').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください。")
+                submit = false
+            }
+            else {
+                $('#GasStationName').next(".err").html("")
+            }
+
+            if (email == "") {
+                $('#GasStationName').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください。")
+                submit = false
+            }
+
+           
+            return submit;
+        })
+    })
+</script>

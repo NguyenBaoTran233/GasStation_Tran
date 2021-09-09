@@ -1,0 +1,159 @@
+﻿
+@model GasStation_Tran.ViewModels.GasStationViewModels
+@{
+    var msg = ViewData["MessageTable"];
+}
+<div class="container-fluid">
+    <form id="formView" method="post">
+        <input type="hidden" value="0" id="SelectPage" name="SelectPage" />
+        <div class="row justify-content-center" style="font-weight:600">
+            <label>
+                <h3>
+                    投稿の閲覧
+                </h3>
+            </label>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">ガソリンスタンド名</label>
+            </div>
+            <div class="col-75">
+                <label>@Model.GasStationFeedback.GasStationName</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="lname" style="font-weight:600">種類</label>
+            </div>
+            <div class="col-75">
+                <label>@Model.GasStationFeedback.GasStationType</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">住所</label>
+            </div>
+            <div class="col-75">
+                <label>@Model.GasStationFeedback.Address @(!string.IsNullOrEmpty(Model.GasStationFeedback.Address)?",":"")@Model.GasStationFeedback.DistrictName</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">開館時間</label>
+            </div>
+            <div class="col-75">
+                <label>@Model.GasStationFeedback.OpeningTime</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" style="font-weight:600">評価</label>
+            </div>
+            <div class="col-75">
+                <label>
+                    @switch (Model.GasStationFeedback.TypeCode)
+                    {
+                        case "00001":
+                            <td><i style="color:red;font-size:20px" class="fas fa-certificate"></i></td>
+                            break;
+                        case "00002":
+                            <td><i style="color:blue;font-size:20px" class="fas fa-certificate"></i></td>
+                            break;
+                        case "00003":
+                            <td><i style="color:gray;font-size:20px" class="fas fa-certificate"></i></td>
+                            break;
+                        default:
+                            break;
+                    }
+                </label>
+            </div>
+        </div>
+        <div class="row" >
+            @if (msg != null)
+            {
+                <div>
+                    @msg
+                </div>
+            }
+            else
+            {
+                @foreach (var item in Model.lstGasStationFeedback)
+                {
+                    <div class="row card">
+                        <div class="card-header">
+                            @item.FeedbackAt.ToString("yy年MM月dd日")
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@item.Feedback</p>
+                        </div>
+                    </div>
+                }
+            }
+            <ul class="pagination row justify-content-end mr-3">
+
+                @{if (msg == null)
+                    {
+                        var totalPage = Convert.ToInt32(ViewBag.Page.ToString());
+
+                        if (ViewBag.CurrentPageView != 0)
+                        {
+                            <li class="page-item">
+                                <a class="page-link text-primary" onclick="changePage(parseInt('@ViewBag.CurrentPageView') - 1)"><i class="fa fa-arrow-left"></i></a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <a class="page-link text-dark" href="#" tabindex="-1" aria-disabled="true"><i class="fa fa-arrow-left"></i></a>
+                            </li>
+                        }
+                        for (int i = 0; i < totalPage + 1; i++)
+                        {
+                            if (i != ViewBag.CurrentPageView)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" onclick="changePage(@i)">
+                                        @(i+1)
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item active" aria-current="page">
+                                    <a class="page-link" onclick="changePage(@i)">@(i+1) <span class="sr-only">(current)</span></a>
+                                </li>
+                            }
+                        }
+                        if (ViewBag.CurrentPageView == totalPage)
+                        {
+                            <li class="page-item disabled">
+                                <a class="page-link text-dark" href="#" tabindex="-1" aria-disabled="true"><i class="fa fa-arrow-right"></i></a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <a class="page-link text-primary" onclick="changePage(parseInt('@ViewBag.CurrentPageView') + 1)"><i class="fa fa-arrow-right"></i></a>
+                            </li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-25">
+                <a class="btn btn-primary" href="/GasStation/Index">戻る</a>
+            </div>
+            <div class="col-75">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function changePage(currentPage) {
+        $('#SelectPage').val(currentPage);
+        $('#formView').submit();
+    }
+</script>

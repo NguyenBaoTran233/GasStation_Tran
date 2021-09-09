@@ -1,0 +1,89 @@
+﻿
+@model GasStation_Tran.Models.User
+
+<div class="container mt-4" style="width:700px" >
+    <form method="post" id="Login" name="Login">
+        <div class="row justify-content-center">
+            <label>
+                <h3>
+                    ガソリンスタンド管理
+
+                </h3>
+            </label>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" class="font-weight-bold">メール</label>
+            </div>
+            <div class="col-75">
+                <input asp-for="Email" class="form-control" autofocus>
+                <p class="err text-danger"></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname" class="font-weight-bold">パスワード</label>
+            </div>
+            <div class="col-75">
+                <input asp-for="Password" type="password" class="form-control">
+                <p class="err text-danger"></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                
+               
+            </div>
+            <div class="col-75">
+                <input type="submit" value="ログイン">
+            </div>
+        </div>
+      
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#Login').on('submit', function () {
+            var submit = true;
+            let email = $('#Email').val();
+            let password = $('#Password').val();
+            if (email.length > 100) {
+                $('#Email').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください")
+                submit = false
+            }
+            else {
+                $('#Email').next(".err").html("")
+            }
+            
+            if (email == "") {
+                $('#Email').next(".err").html("Email trống")
+                submit = false
+            }
+            else {
+                if (!regexEmail.test(String(email).toLocaleLowerCase())) {
+                    $('#Email').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください")
+                }
+                else {
+                    $('#Email').next(".err").html("")
+                }
+            }
+
+            if (password.length > 100) {
+                $('#Password').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください")
+                submit = false
+            }
+            else {
+                $('#Password').next(".err").html("")
+            }
+
+            if (password == "") {
+                $('#Password').next(".err").html("ログインに失敗しました。電子メールまたはパスワードを確認してください");
+                submit = false;
+            }
+            else {
+                $('#Password').next(".err").html("");
+            }
+            return submit;
+        })
+    })
+</script>

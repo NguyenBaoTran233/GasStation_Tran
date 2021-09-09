@@ -1,0 +1,111 @@
+﻿@model GasStation_Tran.Models.List
+
+
+<div class="container" style="background-color: lightgrey">
+    <div class="row justify-content-center">
+        <label>
+            <h3>ガソリンスタンド一覧</h3>
+           
+        </label>
+    </div>
+    <div class="row">
+        <div class="col-25">
+            <label for="fname"><b>ガソリンスタンド名</b></label>
+        </div>
+        <div class="col-75">
+            <input type="text" id="fname" name="firstname" placeholder="">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+            <label for="lname"><b>種類</b></label>
+        </div>
+        <div class="col-75">
+            <input type="checkbox" id="lname" name="lastname"> 92 <br />
+            <input type="checkbox" id="lname" name="lastname"> 95
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+            <label for="country"><b>地区</b></label>
+        </div>
+        <div class="col-75">
+            <select id="country" name="country">
+                <option value="australia">Australia</option>
+                <option value="canada">Canada</option>
+                <option value="usa">USA</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+
+        </div>
+        <div class="col-75">
+            <input type="submit" value="検索">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+            <input type="submit" value="登録">
+        </div>
+        <div class="col-75">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table width="100%" border="1" cellpadding="10">
+                <tr>
+                    <th>
+                        ガソリンスタンド名
+                    </th>
+                    <th>
+                        種類
+                    </th>
+                    <th>
+                        地区
+                    </th>
+                    <th>
+                        Longitude, Latitude
+                    </th>
+                    <th>
+                        評価
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        ABC
+                    </td>
+                    <td>
+                        92,95
+                    </td>
+                    <td>
+                        Quận 12
+                    </td>
+                    <td>
+                        10.2015800,12.0479264
+                    </td>
+                    <td>
+                        text
+                    </td>
+                    <td>
+                        Edit
+                    </td>
+                    <td>
+                        Delete
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+
